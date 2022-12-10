@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+		http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+	<changeSet id="create-table-users" author="andrewsha">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="users" />
+			</not>
+		</preConditions>
+		<createTable tableName="users">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="name" type="varchar(50)">
+				<constraints nullable="false" />
+			</column>
+			<column name="email" type="varchar(100)">
+				<constraints unique="true" />
+			</column>
+			<column name="phone_number" type="varchar(15)">
+				<constraints unique="true" />
+			</column>
+			<column name="password" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="profile_icon" type="varchar(255)">
+				<constraints nullable="true" />
+			</column>
+			<column name="dob" type="date">
+				<constraints nullable="false" />
+			</column>
+			<column name="account_expired" type="date">
+				<constraints nullable="true" />
+			</column>
+			<column name="account_locked" type="date">
+				<constraints nullable="true" />
+			</column>
+			<column name="credentials_expired" type="date">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+
+	<changeSet id="create-table-permissions" author="andrewsha">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="permissions" />
+			</not>
+		</preConditions>
+		<createTable tableName="permissions">
+			<column name="id" type="bigint">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="name" type="varchar(255)">
+				<constraints nullable="false" unique="true" />
+			</column>
+		</createTable>
+	</changeSet>
+
+	<changeSet id="create-table-permission_sets"
+		author="andrewsha">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="permission_sets" />
+			</not>
+		</preConditions>
+		<createTable tableName="permission_sets">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="scope" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+
+	<changeSet id="create-table-user_permissions"
+		author="andrewsha">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="user_permissions" />
+			</not>
+		</preConditions>
+		<createTable tableName="user_permissions">
+			<column name="permission_set_id" type="uuid">
+				<constraints nullable="false" />
+			</column>
+			<column name="user_id" type="uuid">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+
+	<changeSet id="create-table-permission_sets_permissions"
+		author="andrewsha">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="permission_sets_permissions" />
+			</not>
+		</preConditions>
+		<createTable tableName="permission_sets_permissions">
+			<column name="permission_set_id" type="uuid">
+				<constraints nullable="false" />
+			</column>
+			<column name="permission_id" type="bigint">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+
+	<changeSet author="andrewsha"
+		id="dropNotNullConstraint-users.dob">
+		<dropNotNullConstraint columnDataType="date"
+			columnName="dob" schemaName="public" tableName="users" />
+	</changeSet>
+
+	<changeSet author="andrewsha"
+		id="dropNotNullConstraint-users.credentials_expired">
+		<dropNotNullConstraint columnDataType="date"
+			columnName="credentials_expired" schemaName="public" tableName="users" />
+	</changeSet>
+
+</databaseChangeLog>
